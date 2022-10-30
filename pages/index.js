@@ -12,18 +12,14 @@ export default function Home() {
   const {isConnected} = useAccount();
 
   const {config, error} = usePrepareContractWrite({
-    addressOrName: '0xD5610A08E370051a01fdfe4bB3ddf5270af1aA48',
-    contractInterface: ContractInterface,
+    address: '0xD5610A08E370051a01fdfe4bB3ddf5270af1aA48',
+    abi: ContractInterface,
     functionName: 'setName',
-    args:['slobo.eth'],
+    args: ['slobo.eth'],
   });
 
-  //const test = useContractWrite(config);
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
-  //console.log(error);
-  //console.log(ContractInterface);
-  //console.log(config);
   return (
     <div className={styles.container}>
       <Head>
@@ -31,11 +27,18 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <ConnectButton />
-        <p>console.log({error})</p>
+        <br />
         <PageWithJSbasedForm/>
-        <button disabled={!write} onClick={() => write?.()}>
-        set
-      </button>
+        <br />
+
+        {/* from wagmi docs example: https://wagmi.sh/docs/hooks/useContractWrite */}
+        <div>
+          <button disabled={!write} onClick={() => write?.()}>
+            Feed
+          </button>
+          {isLoading && <div>Check Wallet</div>}
+          {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+        </div>
 
       </main>
 
