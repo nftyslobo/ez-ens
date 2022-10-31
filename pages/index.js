@@ -15,6 +15,7 @@ export default function Home() {
   const [formData, setFormData] = useState({});
   const save = () => {
     console.log(formData);
+    console.log(Object.values(formData)[0])
   };
 
   console.log(formData.keys)
@@ -25,7 +26,7 @@ export default function Home() {
     address: '0xD5610A08E370051a01fdfe4bB3ddf5270af1aA48',
     abi: ContractInterface,
     functionName: 'setName',
-    args: [formData],
+    args: [Object.values(formData)[0]],
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
