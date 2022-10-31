@@ -1,15 +1,32 @@
-export default function PageWithJSbasedForm() {
-    // Handles the submit event on form submit.
+import { useEffect, useState } from "react";
+import { useRef } from "react";
+
+export default function PrimaryNameForm({ onChange }) {
+    
+    const [primaryName, setPrimaryName] = useState('');
+    const formRef = useRef();
+
+    useEffect(() => {
+        onChange({
+            primaryName,
+        });
+      }, [primaryName, onChange]);
+
+    const save = () => {
+        console.log({ formRef });
+      };
+    
+    
     const handleSubmit = async (event) => {
-      // Stop the form from submitting and refreshing the page.
-      event.preventDefault()
+      event.preventDefault();
+      console.log(primaryName);
+      setPrimaryName('');
   
       // Get data from the form.
       const data = {
         primary_name: event.target.primary_name.value
       }
   
-      // Send the data to the server in JSON format.
       const JSONdata = JSON.stringify(data)
   
       // API endpoint where we send form data.
@@ -17,31 +34,29 @@ export default function PageWithJSbasedForm() {
   
       // Form the request for sending data to the server.
       const options = {
-        // The method is POST because we are sending data.
         method: 'POST',
-        // Tell the server we're sending JSON.
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // Body of the request is the JSON data we created above.
+        headers: {'Content-Type': 'application/json',},
         body: JSONdata,
       }
-  
-      // Send the form data to our forms API on Vercel and get a response.
+
       const response = await fetch(endpoint, options)
-  
-      // Get the response data from server as JSON.
-      // If server returns the name submitted, that means the form works.
       const result = await response.json()
-      alert(`This is the name to be set: ${result.data}`)
+      
     }
     return (
       // We pass the event to the handleSubmit() function on submit.
-      <form onSubmit={handleSubmit}>
+      <form ref={formRef}>
         <label htmlFor="primary_name">Primary Name</label>
-        <input type="text" id="primary_name" name="primary_name" required />
+        <input 
+            type='text'
+            id='primary_name'
+            name='primary_name' required
+            onChange={event => setPrimaryName(event.target.value)} 
+            value={primaryName}
+            placeholder='nftychat.eth'
+        />
   
-        <button type="submit">Set Name</button>
+        <button type='submit'>Set Name</button>
       </form>
     )
   }
