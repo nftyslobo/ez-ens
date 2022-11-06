@@ -57,8 +57,6 @@ export default function Home() {
             </div>
             <div align="center">
               <ConnectButton
-                chainStatus="icon"
-                showBalance={false}
               />
             </div>
           </div>
