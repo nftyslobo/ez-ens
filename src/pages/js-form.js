@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { useRef } from "react";
 
 export default function PrimaryNameForm({ onChange }) {
     
     const [primaryName, setPrimaryName] = useState('');
-    const formRef = useRef();
 
     useEffect(() => {
         onChange({
@@ -12,15 +10,10 @@ export default function PrimaryNameForm({ onChange }) {
         });
       }, [primaryName, onChange]);
 
-    const save = () => {
-        console.log({ formRef });
-      };
     
-    
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-      console.log(primaryName);
-      setPrimaryName('');
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        setPrimaryName('');
   
       // Get data from the form.
       const data = {
@@ -45,7 +38,7 @@ export default function PrimaryNameForm({ onChange }) {
     }
     return (
       // We pass the event to the handleSubmit() function on submit.
-      <form ref={formRef}>
+      <form>
         <label htmlFor="primary_name">Primary Name</label>
         <input 
             type='text'
@@ -55,8 +48,6 @@ export default function PrimaryNameForm({ onChange }) {
             value={primaryName}
             placeholder='nftychat.eth'
         />
-  
-        <button type='submit'>Set Name</button>
       </form>
     )
   }
