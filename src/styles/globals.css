@@ -1,3 +1,90 @@
+:root {
+  --alto: #dadada;
+  --black: #000000;
+  --dove-gray: #6b6b6b;
+  --fuchsia-pink: #b85cb9;
+  --royal-blue: #467ee5;
+  --scarlet: #f92449;
+  --white: #ffffff;
+
+  --font-size-l: 22px;
+  --font-size-m: 16px;
+  --font-size-s: 10px;
+  --font-size-xl: 32px;
+
+  --font-family-inter: "Inter", Helvetica;
+  --font-family-noto_sans: "Noto Sans", Helvetica;
+  --font-family-sf_pro-bold: "SF Pro-Bold", Helvetica;
+  --font-family-sf_pro_rounded-bold: "SF Pro Rounded-Bold", Helvetica;
+  --font-family-sf_pro_rounded-regular: "SF Pro Rounded-Regular", Helvetica;
+}
+
+.sfprorounded-regular-normal-dove-gray-16px {
+  color: var(--dove-gray);
+  font-family: var(--font-family-sf_pro_rounded-regular);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.sfpro-bold-black-16px {
+  color: var(--black);
+  font-family: var(--font-family-sf_pro-bold);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.sfprorounded-bold-black-22px {
+  color: var(--black);
+  font-family: var(--font-family-sf_pro_rounded-bold);
+  font-size: var(--font-size-l);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.sfprorounded-bold-black-32px {
+  color: var(--black);
+  font-family: var(--font-family-sf_pro_rounded-bold);
+  font-size: var(--font-size-xl);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.sfprorounded-bold-dove-gray-16px {
+  color: var(--dove-gray);
+  font-family: var(--font-family-sf_pro_rounded-bold);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.sfprorounded-bold-white-16px {
+  color: var(--white);
+  font-family: var(--font-family-sf_pro_rounded-bold);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.inter-normal-royal-blue-16px {
+  color: var(--royal-blue);
+  font-family: var(--font-family-inter);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.notosans-normal-white-10px {
+  color: var(--white);
+  font-family: var(--font-family-noto_sans);
+  font-size: var(--font-size-s);
+  font-style: normal;
+  font-weight: 400;
+}
+
+
+
 html,
 body {
   padding: 64;
@@ -6,7 +93,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 
-    
 }
 
 a {
@@ -22,7 +108,171 @@ a {
   html {
     color-scheme: dark;
   }
+
   body {
     background: rgba(255, 255, 255, 1);
   }
+}
+
+
+.top-bar {
+  align-items: center;
+  background-color: var (--white);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: rgb(189, 135, 135);
+  display: flex;
+  gap: 1071px;
+  height: 72px;
+  left: 0;
+  min-width: 1440px;
+  padding: 0 64px;
+  position: fixed;
+  top: 0;
+  z-index: 1;
+}
+
+.title {
+  align-items: flex-start;
+  border: 1px none;
+  display: flex;
+  gap: 8px;
+  width: fit-content;
+}
+
+.vector {
+  height: 24px;
+  min-width: 23.16px;
+}
+
+.ez-ens {
+  letter-spacing: 0;
+  line-height: 24px;
+  margin-top: -1px;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.sfprorounded-bold-black-22px {
+  color: var(--black);
+  font-family: var(--font-family-sf_pro_rounded-bold);
+  font-size: var(--font-size-l);
+  font-style: normal;
+  font-weight: 700;
+}
+
+
+
+.box {
+  width: fit-content;
+  z-index: 3;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+  margin-top: 110px;
+  display: flex;
+  position: relative;
+  border-width: 1px;
+  border-style: solid;
+  border-image: initial;
+  border-color: var(--alto);
+  border-radius: 19px;
+  gap: 40px;
+  padding: 60px 60px 80px;
+}
+
+.text {
+  width: fit-content;
+  flex-direction: column;
+  align-items: flex-start;
+  display: flex;
+  border-width: 1px;
+  border-style: initial;
+  border-color: initial;
+  border-image: initial;
+  gap: 16px;
+}
+
+.home-default .new-ens-name {
+  letter-spacing: 0;
+  line-height: 24px;
+  margin-top: -1px;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.valign-text-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sfprorounded-regular-normal-dove-gray-16px {
+  color: var(--dove-gray);
+  font-family: var(--font-family-sf_pro_rounded-regular);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.name-input-field {
+  align-items: center;
+  background-color: var(--white);
+  border: 1px solid;
+  border-color: var(--alto);
+  border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  padding: 16px 12px;
+  width: 374px;
+}
+
+.new-ens-name {
+  letter-spacing: 0;
+  line-height: 24px;
+  margin-top: -1.00px;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.valign-text-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.small-button {
+  align-items: center;
+  background-color: var(--white);
+  border: 2px solid;
+  border-color: var(--fuchsia-pink);
+  border-radius: 12px;
+  display: flex;
+  gap: 8px;
+  height: 40px;
+  justify-content: flex-start;
+  min-width: 50px;
+  padding: 16px 12px;
+}
+
+.connect-wallet {
+  letter-spacing: 0px;
+  white-space: nowrap;
+  width: fit-content;
+  margin-top: -1px;
+  line-height: 24px;
+}
+
+.button {
+  width: fit-content;
+  align-items: flex-start;
+  display: flex;
+  border-width: 1px;
+  border-style: initial;
+  border-color: initial;
+  border-image: initial;
+  border-radius: 12px;
+  gap: 10px;
+  padding: 8px 12px;
 }
