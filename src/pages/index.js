@@ -3,7 +3,7 @@ import { useState } from "react";
 import styles from '../styles/Home.module.css'
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import PrimaryNameForm from './js-form';
-import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { useWaitForTransaction, useContractWrite, usePrepareContractWrite, useNetwork } from 'wagmi';
 import Image from 'next/image'
 import TopBar from '../components/TopBar';
 
@@ -13,15 +13,32 @@ export default function Home() {
 
 
   const [formData, setFormData] = useState({});
+  const { chain, chains } = useNetwork();
+
+  const mainnet_contract = '0x084b1c3C81545d370f3634392De611CaaBFf8148';
+  const goerli_contract = '0xD5610A08E370051a01fdfe4bB3ddf5270af1aA48';
+
+  const mainnet_etherscan = "https://etherscan.io/tx/"
+  const goerl_etherscan = "https://goerli.etherscan.io/tx/"
+
+
+  const contract_address = chain?.id === 1 ? mainnet_contract : goerli_contract;
+  const etherscan_url = chain?.id === 1 ? mainnet_etherscan : goerl_etherscan;
+
 
   const { config, error } = usePrepareContractWrite({
-    address: '0xD5610A08E370051a01fdfe4bB3ddf5270af1aA48',
+    address: contract_address,
     abi: ContractInterface,
     functionName: 'setName',
     args: [Object.values(formData)[0]],
   });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  const waitForTransaction = useWaitForTransaction({
+    chainId: chain?.id,
+    hash: data?.hash,
+  })
 
   return (
     <div className={styles.container}>
@@ -38,7 +55,9 @@ export default function Home() {
         <div>
           <div class="box">
             <div>
-              <div align="center"><img class="vector-2" src="/logo.svg" alt="Vector"></img></div>
+              <div align="center">
+                <img class="vector-2" src="/logo.svg" alt="Vector"></img>
+              </div>
               <div class="title-2">
                 <h1 class="title-4 valign-text-middle sfprorounded-bold-black-32px">Set your primary ENS</h1>
               </div>
@@ -52,13 +71,27 @@ export default function Home() {
                   Set
                 </button>
               </div>
-              {isLoading && <div>Check Wallet</div>}
-              {isSuccess && <div>Transaction: <a href={"https://goerli.etherscan.io/tx/" + data.hash}>Etherscan</a></div>}
+
             </div>
             <div align="center">
               <ConnectButton
               />
             </div>
+          </div>
+          <div class="sfpro-bold-black-16px">
+            <br />
+            {isLoading && <div align="center">Waiting for txn approval...</div>}
+
+            {waitForTransaction.isLoading &&
+              <div align="center">
+                {chain.name}: <a href={etherscan_url + data.hash}>Etherscan</a> - ...pending...
+              </div>
+            }
+            {waitForTransaction.isSuccess &&
+              <div align="center">
+                {chain.name}: <a href={etherscan_url + data.hash}>Etherscan</a> - Success!
+              </div>
+            }
           </div>
         </div>
       </main>

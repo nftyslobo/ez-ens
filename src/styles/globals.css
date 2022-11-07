@@ -35,6 +35,11 @@
   font-weight: 700;
 }
 
+.sfpro-bold-black-16px a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
 .sfprorounded-bold-black-22px {
   color: var(--black);
   font-family: var(--font-family-sf_pro_rounded-bold);
