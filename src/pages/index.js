@@ -18,6 +18,9 @@ import ContractInterface from "../../contract-abi.json";
 
 export default function Home() {
   const [userInput, setUserInput] = useState("");
+  // Tracks input after user has stopped typing
+  const [finalUserInput, setFinalUserInput] = useState("")
+  // Tracks whether input is valid
   const [validInput, setValidInput] = useState(false);
   const [userIsTyping, setUserIsTyping] = useState(false);
 
@@ -58,7 +61,7 @@ export default function Home() {
     isLoading: ensIsLoading,
     status: ensStatus,
   } = useEnsAddress({
-    name: userInput, //userStopTyping &&
+    name: finalUserInput,
     chainId: chain?.id,
     onSettled(data, error) {
       console.log("Settled", { data, error });
@@ -67,23 +70,31 @@ export default function Home() {
 
   const [typingTimer, setTypingTimer] = useState();
 
-  useEffect(() => {
-    async function verifyUserInput() {
-      if (accountAddress === ensDataAddress) {
-        setValidInput(true);
-        console.log(ensDataAddress);
-      }
-    }
+  // Use Effect to update Final userInput
+  function handleNewUserInput(newUserInput){
+    // set user input first
+    setUserInput(newUserInput)
+    // Valid input will be false
     setValidInput(false);
+    // Set typing timer
     clearTimeout(typingTimer);
-    console.log(typingTimer);
     setTypingTimer(
       setTimeout(() => {
-        verifyUserInput();
+        setFinalUserInput(newUserInput)
         console.log(typingTimer);
       }, 2000)
     );
-  }, [userInput]);
+  }
+
+  // useEffect to verify input
+  useEffect(() =>{
+    console.log('New address from wagmi ' + ensDataAddress);
+    console.log()
+    if (accountAddress === ensDataAddress && ![null, undefined, ""].includes(accountAddress) ) {
+      console.log("Valid ens selection")
+      setValidInput(true);
+    }
+  }, [ensDataAddress, accountAddress])
 
   return (
     <div className={styles.container}>
@@ -106,9 +117,11 @@ export default function Home() {
                 className="name-input-field new-ens-name sfprorounded-regular-normal-dove-gray-16px"
                 type="text"
                 placeholder="enter name"
-                onChange={(event) =>
-                  setUserInput(event.target.value.toLowerCase())
+                onChange={(event) =>{
+                    handleNewUserInput(event.target.value.toLowerCase())
+                  }
                 }
+                value={userInput}
               />
             </div>
             <br />
@@ -122,7 +135,8 @@ export default function Home() {
               </button>
               <br />
 
-              {userInput && !validInput && (
+              {[null, undefined, ""].includes(accountAddress) && <div className="sfpro-bold-black-16px"> Please connect wallet</div>}
+              {![null, undefined, ""].includes(accountAddress)  && userInput && !validInput && (
                 <div className="sfpro-bold-black-16px">verifying name...</div>
               )}
               {!userInput && <div className="sfpro-bold-black-16px"> .</div>}
