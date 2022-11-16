@@ -1,36 +1,42 @@
-import Head from 'next/head'
-import { useState } from "react";
-import styles from '../styles/Home.module.css'
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import PrimaryNameForm from './js-form';
-import { useWaitForTransaction, useContractWrite, usePrepareContractWrite, useNetwork } from 'wagmi';
-import Image from 'next/image'
-import TopBar from '../components/TopBar';
+import Head from "next/head";
+import { useState, useEffect } from "react";
+import styles from "../styles/Home.module.css";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { Icon } from "@iconify/react";
 
-import ContractInterface from '../../contract-abi.json';
+import {
+  useWaitForTransaction,
+  useContractWrite,
+  usePrepareContractWrite,
+  useNetwork,
+  useEnsAddress,
+  useAccount,
+} from "wagmi";
+import TopBar from "../components/TopBar";
+
+import ContractInterface from "../../contract-abi.json";
 
 export default function Home() {
+  const [userInput, setUserInput] = useState("");
+  const [validInput, setValidInput] = useState(false);
+  const [userIsTyping, setUserIsTyping] = useState(false);
 
-
-  const [formData, setFormData] = useState({});
   const { chain, chains } = useNetwork();
 
-  const mainnet_contract = '0x084b1c3C81545d370f3634392De611CaaBFf8148';
-  const goerli_contract = '0xD5610A08E370051a01fdfe4bB3ddf5270af1aA48';
+  const mainnet_contract = "0x084b1c3C81545d370f3634392De611CaaBFf8148";
+  const goerli_contract = "0xD5610A08E370051a01fdfe4bB3ddf5270af1aA48";
 
-  const mainnet_etherscan = "https://etherscan.io/tx/"
-  const goerl_etherscan = "https://goerli.etherscan.io/tx/"
-
+  const mainnet_etherscan = "https://etherscan.io/tx/";
+  const goerl_etherscan = "https://goerli.etherscan.io/tx/";
 
   const contract_address = chain?.id === 1 ? mainnet_contract : goerli_contract;
   const etherscan_url = chain?.id === 1 ? mainnet_etherscan : goerl_etherscan;
 
-
   const { config, error } = usePrepareContractWrite({
     address: contract_address,
     abi: ContractInterface,
-    functionName: 'setName',
-    args: [Object.values(formData)[0]],
+    functionName: "setName",
+    args: [userInput],
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
@@ -38,66 +44,135 @@ export default function Home() {
   const waitForTransaction = useWaitForTransaction({
     chainId: chain?.id,
     hash: data?.hash,
-  })
+  });
+
+  const {
+    address: accountAddress,
+    isConnecting: accountIsConnecting,
+    isDisconnected: accountIsDisconnected,
+  } = useAccount();
+
+  const {
+    data: ensDataAddress,
+    isError: ensIsError,
+    isLoading: ensIsLoading,
+    status: ensStatus,
+  } = useEnsAddress({
+    name: userInput, //userStopTyping &&
+    chainId: chain?.id,
+    onSettled(data, error) {
+      console.log("Settled", { data, error });
+    },
+  });
+
+  const [typingTimer, setTypingTimer] = useState();
+
+  useEffect(() => {
+    async function verifyUserInput() {
+      if (accountAddress === ensDataAddress) {
+        setValidInput(true);
+        console.log(ensDataAddress);
+      }
+    }
+    setValidInput(false);
+    clearTimeout(typingTimer);
+    console.log(typingTimer);
+    setTypingTimer(
+      setTimeout(() => {
+        verifyUserInput();
+        console.log(typingTimer);
+      }, 2000)
+    );
+  }, [userInput]);
 
   return (
     <div className={styles.container}>
       <Head>
         <title>ez ens</title>
-        <link
-          rel="icon"
-          type="image/x-icon"
-          href="/favicon.ico"
-        />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <TopBar />
-        <div>
-          <div class="box">
-            <div>
-              <div align="center">
-                <img class="vector-2" src="/logo.svg" alt="Vector"></img>
-              </div>
-              <div class="title-2">
-                <h1 class="title-4 valign-text-middle sfprorounded-bold-black-32px">Set your primary ENS</h1>
-              </div>
-              <div align="center">
-                <PrimaryNameForm onChange={setFormData} />
-              </div>
-              <br />
-              <div align="center">
-                <button class="small-button sfpro-bold-black-16px"
-                  disabled={!write} onClick={() => write?.()}>
-                  Set
-                </button>
-              </div>
-
-            </div>
+        <div className="box">
+          <TopBar />
+          <div>
             <div align="center">
-              <ConnectButton
+              <img className="vector-2" src="/logo.svg" alt="Vector"></img>
+            </div>
+            <h1 className="valign-text-middle sfprorounded-bold-black-32px">
+              Set your primary ENS
+            </h1>
+            <div align="center">
+              <input
+                className="name-input-field new-ens-name sfprorounded-regular-normal-dove-gray-16px"
+                type="text"
+                placeholder="enter name"
+                onChange={(event) =>
+                  setUserInput(event.target.value.toLowerCase())
+                }
               />
             </div>
-          </div>
-          <div class="sfpro-bold-black-16px">
             <br />
-            {isLoading && <div align="center">Waiting for txn approval...</div>}
+            <div align="center">
+              <button
+                className="small-button sfpro-bold-black-16px"
+                disabled={!validInput} /* put !write into disabled */
+                onClick={() => write?.()}
+              >
+                Set
+              </button>
+              <br />
 
-            {waitForTransaction.isLoading &&
-              <div align="center">
-                {chain.name}: <a href={etherscan_url + data.hash}>Etherscan</a> - ...pending...
-              </div>
-            }
-            {waitForTransaction.isSuccess &&
-              <div align="center">
-                {chain.name}: <a href={etherscan_url + data.hash}>Etherscan</a> - Success!
-              </div>
-            }
+              {userInput && !validInput && (
+                <div className="sfpro-bold-black-16px">verifying name...</div>
+              )}
+              {!userInput && <div className="sfpro-bold-black-16px"> .</div>}
+              {validInput && (
+                <div className="sfpro-bold-black-16px">
+                  {" "}
+                  <Icon icon="akar-icons:circle-check" color="green" />
+                </div>
+              )}
+            </div>
+          </div>
+          <div align="center">
+            <ConnectButton />
           </div>
         </div>
+        <div className="sfpro-bold-black-16px" align="center">
+          <br />
+          {isLoading && <div>Waiting for txn approval...</div>}
+
+          {waitForTransaction.isLoading && (
+            <div>
+              Pending Confirmation: {chain.name}:{" "}
+              <div className="sfpro-black-16px">
+                <div className="sfpro-black-16px">
+                  Txn Hash:{" "}
+                  <a href={etherscan_url + data.hash}>
+                    {data.hash.slice(0, 12)}...
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+          {waitForTransaction.isSuccess && (
+            <div>
+              Success!{" "}
+              <div className="sfpro-black-16px">
+                Txn Hash:{" "}
+                <a href={etherscan_url + data.hash}>
+                  {data.hash.slice(0, 12)}...
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+        {/*
+        {validInput && ensisLoading && <div className="notosans-normal-white-10px">Fetching address…</div>}
+        {validInput && ensisError && <div className="notosans-normal-white-10px">Error fetching address</div>}
+        {validInput && ensAddressdata && <div className="notosans-normal-white-10px">Address: {ensAddressdata}</div>}
+      */}
       </main>
-      <footer className={styles.footer}>
-        <p>2022</p>
-      </footer>
     </div>
-  )
+  );
 }
