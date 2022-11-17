@@ -146,10 +146,28 @@ export default function Home() {
               </button>
 
               <br />
+              {!userInput && (
+                <div className="sfpro-bold-black-16px">
+                  {" "}
+                  <Icon icon="mdi:ethereum" color="purple" />
+                  <br />
+                  <p></p>
+                </div>
+              )}
+              {!typing && userInput && (
+                <div className="sfpro-bold-black-16px">
+                  {" "}
+                  <Icon icon="eos-icons:typing" color="green" />
+                  <br />
+                  <p></p>
+                </div>
+              )}
               {validInput && ensOwned && (
                 <div className="sfpro-bold-black-16px">
                   {" "}
                   <Icon icon="akar-icons:circle-check" color="green" />
+                  <br />
+                  <p></p>
                 </div>
               )}
               {!ensOwned && userInput && accountAddress && typing && (
