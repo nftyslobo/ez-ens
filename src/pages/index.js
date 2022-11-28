@@ -4,6 +4,7 @@ import styles from "../styles/Home.module.css";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Icon } from "@iconify/react";
 import { gql } from "@apollo/client";
+import { UniversalDm } from "nftychat-universe";
 
 import {
   useWaitForTransaction,
@@ -205,7 +206,13 @@ export default function Home() {
           <div align="center">
             <ConnectButton />
           </div>
-          <button onClick={handleClick}>query</button>
+          {/*<button onClick={handleClick}>query</button>*/}
+          <UniversalDm
+            address="0x534631Bcf33BDb069fB20A93d2fdb9e4D4dD42CF"
+            displayText="dm slobo.eth for help"
+            theme="light"
+            popoverDirection="bottom"
+          />
         </div>
         <div className="sfpro-bold-black-16px" align="center">
           <br />
