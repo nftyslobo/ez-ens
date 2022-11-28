@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Icon } from "@iconify/react";
+import { gql } from "@apollo/client";
 
 import {
   useWaitForTransaction,
@@ -13,6 +14,7 @@ import {
   useAccount,
 } from "wagmi";
 import TopBar from "../components/TopBar";
+import apolloClient from "../components/ApolloClient";
 
 import ContractInterface from "../../contract-abi.json";
 
@@ -24,6 +26,26 @@ export default function Home() {
   const [validInput, setValidInput] = useState(false);
   const [typing, setTyping] = useState(false);
   const [ensOwned, setEnsOwned] = useState(false);
+
+  const [ownedNames, setOwnedNames] = useState();
+
+  // const client = ...
+
+  function handleClick() {
+    apolloClient
+      .query({
+        query: gql`
+            {
+              resolvers (where: { addr: "${accountAddress.toLowerCase()}" }) 
+              {
+              domain{name}
+              }
+            }
+        `,
+      })
+      .then((result) => setOwnedNames(result));
+    console.log(ownedNames);
+  }
 
   const { chain, chains } = useNetwork();
 
@@ -57,6 +79,7 @@ export default function Home() {
   } = useAccount();
 
   const {
+    //useEnsAddress
     data: ensDataAddress,
     isError: ensIsError,
     isLoading: ensIsLoading,
@@ -182,6 +205,7 @@ export default function Home() {
           <div align="center">
             <ConnectButton />
           </div>
+          <button onClick={handleClick}>query</button>
         </div>
         <div className="sfpro-bold-black-16px" align="center">
           <br />
