@@ -15,7 +15,7 @@
     "ethers": "^5.7.2",
     "graphql": "^16.6.0",
     "next": "13.0.0",
-    "nftychat-universe": "^1.4.1",
+    "nftychat-universe": "^2.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "wagmi": "^0.7.8"

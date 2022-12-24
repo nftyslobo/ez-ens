@@ -1,10 +1,10 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
 import { Icon } from "@iconify/react";
 import { gql } from "@apollo/client";
-import { UniversalDm } from "nftychat-universe";
+import { UniversalSupport } from "nftychat-universe";
 
 import {
   useWaitForTransaction,
@@ -30,6 +30,8 @@ export default function Home() {
 
   const [ownedNames, setOwnedNames] = useState();
 
+  const { openConnectModal } = useConnectModal();
+
   // const client = ...
 
   function handleClick() {
@@ -51,7 +53,7 @@ export default function Home() {
   const { chain, chains } = useNetwork();
 
   const mainnet_contract = "0x084b1c3C81545d370f3634392De611CaaBFf8148";
-  const goerli_contract = "0xD5610A08E370051a01fdfe4bB3ddf5270af1aA48";
+  const goerli_contract = "0x6F628b68b30Dc3c17f345c9dbBb1E483c2b7aE5c";
 
   const mainnet_etherscan = "https://etherscan.io/tx/";
   const goerl_etherscan = "https://goerli.etherscan.io/tx/";
@@ -115,7 +117,8 @@ export default function Home() {
 
   // useEffect to verify input
   useEffect(() => {
-    console.log("New address from wagmi " + ensDataAddress);
+    console.log("New address from wagmi 1 " + ensDataAddress);
+    console.log("contract address:" + contract_address);
     if (
       accountAddress === ensDataAddress &&
       ![null, undefined, ""].includes(accountAddress)
@@ -130,7 +133,7 @@ export default function Home() {
       console.log("inputed addresss not owned by connected address");
       setEnsOwned(false);
     }
-  }, [ensDataAddress, accountAddress]);
+  }, [ensDataAddress, accountAddress, contract_address, finalUserInput]);
 
   return (
     <div className={styles.container}>
@@ -194,25 +197,23 @@ export default function Home() {
                   <p></p>
                 </div>
               )}
-              {!ensOwned && userInput && accountAddress && typing && (
-                <div className="sfpro-black-16px">
-                  <Icon icon="akar-icons:face-sad" color="orange" />
-                  <br />
-                  {userInput + " does not resolve to connected address"}
-                </div>
-              )}
+              {!ensOwned &&
+                userInput &&
+                accountAddress &&
+                typing &&
+                !ensIsLoading && (
+                  <div className="sfpro-black-16px">
+                    <Icon icon="akar-icons:face-sad" color="orange" />
+                    <br />
+                    {userInput + " does not resolve to connected address"}
+                  </div>
+                )}
             </div>
           </div>
           <div align="center">
             <ConnectButton />
           </div>
-          {/*<button onClick={handleClick}>query</button>*/}
-          <UniversalDm
-            address="0x534631Bcf33BDb069fB20A93d2fdb9e4D4dD42CF"
-            displayText="dm slobo.eth for help"
-            theme="light"
-            popoverDirection="bottom"
-          />
+          <button onClick={handleClick}>query</button>
         </div>
         <div className="sfpro-bold-black-16px" align="center">
           <br />
@@ -244,6 +245,14 @@ export default function Home() {
           )}
         </div>
       </main>
+      <div className={styles.support}>
+        <UniversalSupport
+          address="0x534631Bcf33BDb069fB20A93d2fdb9e4D4dD42CF"
+          theme="light"
+          welcomeMessage="Slobo.eth is standing by to help."
+          connectWalletFunction={openConnectModal}
+        />
+      </div>
     </div>
   );
 }

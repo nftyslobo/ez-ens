@@ -2,6 +2,11 @@
   padding: 0 2rem;
 }
 
+.support {
+  padding-bottom: 15px;
+  float: right;
+}
+
 .main {
   min-height: 100vh;
   padding: 4rem 0;
