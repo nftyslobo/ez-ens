@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
-import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Icon } from "@iconify/react";
 import { gql } from "@apollo/client";
 import { UniversalSupport } from "nftychat-universe";
@@ -141,9 +141,10 @@ export default function Home() {
         <title>ez ens</title>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
       </Head>
+      <TopBar />
+
       <main className={styles.main}>
         <div className="box">
-          <TopBar />
           <div>
             <div align="center">
               <img className="vector-2" src="/logo.svg" alt="Vector"></img>
@@ -210,19 +211,27 @@ export default function Home() {
                 )}
             </div>
           </div>
-          <div align="center">
-            <ConnectButton />
-          </div>
-          <button onClick={handleClick}>query</button>
-        </div>
-        <div className="sfpro-bold-black-16px" align="center">
-          <br />
-          {isLoading && <div>Waiting for txn approval...</div>}
+          {/*<button onClick={handleClick}>query</button>*/}
+          <div className="sfpro-bold-black-16px" align="center">
+            <br />
+            {isLoading && <div>Waiting for txn approval...</div>}
 
-          {waitForTransaction.isLoading && (
-            <div>
-              Pending Confirmation: {chain.name}:{" "}
-              <div className="sfpro-black-16px">
+            {waitForTransaction.isLoading && (
+              <div>
+                Pending Confirmation: {chain.name}:{" "}
+                <div className="sfpro-black-16px">
+                  <div className="sfpro-black-16px">
+                    Txn Hash:{" "}
+                    <a href={etherscan_url + data.hash}>
+                      {data.hash.slice(0, 12)}...
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+            {waitForTransaction.isSuccess && (
+              <div>
+                Success!{" "}
                 <div className="sfpro-black-16px">
                   Txn Hash:{" "}
                   <a href={etherscan_url + data.hash}>
@@ -230,29 +239,19 @@ export default function Home() {
                   </a>
                 </div>
               </div>
-            </div>
-          )}
-          {waitForTransaction.isSuccess && (
-            <div>
-              Success!{" "}
-              <div className="sfpro-black-16px">
-                Txn Hash:{" "}
-                <a href={etherscan_url + data.hash}>
-                  {data.hash.slice(0, 12)}...
-                </a>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+        <div className={styles.support}>
+          <UniversalSupport
+            address="0x534631Bcf33BDb069fB20A93d2fdb9e4D4dD42CF"
+            theme="light"
+            welcomeMessage="slobo.eth is standing by to help."
+            connectWalletFunction={openConnectModal}
+          />
+        </div>
+        <hr></hr>
       </main>
-      <div className={styles.support}>
-        <UniversalSupport
-          address="0x534631Bcf33BDb069fB20A93d2fdb9e4D4dD42CF"
-          theme="light"
-          welcomeMessage="Slobo.eth is standing by to help."
-          connectWalletFunction={openConnectModal}
-        />
-      </div>
     </div>
   );
 }

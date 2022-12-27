@@ -1,4 +1,5 @@
 import React from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 function TopBar() {
   return (
@@ -8,6 +9,9 @@ function TopBar() {
         <div className="ez-ens valign-text-middle sfprorounded-bold-black-22px  ">
           EZ ENS
         </div>
+      </div>
+      <div className="connect">
+        <ConnectButton />
       </div>
     </div>
   );

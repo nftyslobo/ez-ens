@@ -42,6 +42,7 @@
   font-size: var(--font-size-m);
   font-style: normal;
   font-weight: 300;
+  max-width: 300px;
 }
 
 .sfpro-bold-black-16px a {
@@ -135,16 +136,16 @@ a {
 
 .top-bar {
   align-items: center;
-  background-color: var (--white);
+  background-color: var(--white);
   display: flex;
-  gap: 1071px;
-  height: 72px;
-  left: 0;
-  min-width: 1440px;
-  padding: 0 64px;
+  height: 60px;
+  position: static;
+}
+
+.connect {
   position: fixed;
-  top: 0;
-  z-index: 1;
+  top: 8px;
+  right: 8px;
 }
 
 .title {
@@ -182,7 +183,7 @@ a {
   flex-direction: column;
   align-self: center;
   align-items: center;
-  margin-top: 110px;
+  margin-top: 20px;
   display: flex;
   position: relative;
   border-width: 1px;
