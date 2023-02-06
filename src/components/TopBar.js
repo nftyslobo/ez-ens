@@ -10,6 +10,10 @@ function TopBar() {
           EZ ENS
         </div>
       </div>
+      {/*<div className="nav">
+        <div className="nav-item">Set Primary Name</div>
+        <div className="nav-item">Register ENS</div>
+  </div>*/}
       <div className="connect">
         <ConnectButton />
       </div>
